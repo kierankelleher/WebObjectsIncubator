@@ -1,0 +1,28 @@
+{
+    attributes = (
+        {allowsNull = N; columnName = idrole; name = idRole; prototypeName = id; }, 
+        {allowsNull = N; columnName = iduser; name = idUser; prototypeName = id; }
+    ); 
+    attributesUsedForLocking = (idRole, idUser); 
+    className = EOGenericRecord; 
+    classProperties = (role); 
+    externalName = eruserrole; 
+    fetchSpecificationDictionary = {}; 
+    name = ERUserRole; 
+    primaryKeyAttributes = (idRole, idUser); 
+    relationships = (
+        {
+            destination = ERRole; 
+            isMandatory = Y; 
+            isToMany = N; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = id; sourceAttribute = idRole; }); 
+            name = role; 
+        }
+    ); 
+    userInfo = {
+        "_EntityModeler" = {
+            documentation = "This is the User Role join table. The user entity relationship is modeled dynamically at startup by the principal class in this framework."; 
+        }; 
+    }; 
+}

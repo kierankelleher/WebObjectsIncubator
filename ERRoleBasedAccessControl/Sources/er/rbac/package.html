@@ -1,0 +1,87 @@
+<html>
+<head>
+</head>
+<body>
+<style>
+p {
+	color: rgb(80, 80, 80);
+}
+
+h1,h2,h3,h4 {
+	font-family: Helvetica;
+	margin-top: 20px;
+}
+
+dl dt {
+	font-family: Helvetica;
+	font-weight: bold;
+}
+
+dl dd {
+	margin-bottom: 10px;
+}
+
+code.block {
+	display: block;
+	margin-left: 20px;
+	margin-right: 20px;
+	white-space: pre;
+}
+
+</style>
+
+<h1>ERRoleBasedAccessControl</h1>
+
+<h2>Overview</h2>
+<p>
+ERRoleBasedAccessControl is a framework designed to help with user roles and privileges management. The objective is to provide the infrastructure and common business logic for determining if a user has a specific privilege in one of his assigned roles.
+</p>
+<p>A user can be assigned many roles. A role typically has many privileges (aka permissions). You can define roles and privileges any way you want. It is your app. However if you are unsure, here is some advice (note 'advice', not rules!):</p>
+<ul>
+	<li>Many privileges will represent the four common CRUD operations on core EOEntity types.
+	For example, if you have an entity 'Customer' you might define the following 4 privileges: canCreateCustomer, canReadCustomer, canUpdateCustomer and canDeleteCustomer</li>
+	<li>You can define custom privileges too for example canResetPasswords (perhaps to allow a
+	customer service representative to reset users' passwords)</li>
+	<li>Roles should generally correspond to functional roles in an organization, and it might
+	be better to have narrow functional roles defined, even it if means people get multiple roles
+	assigned in the app. it will make it easier later to divide functional responsibilities. Examples of roles might be CustomerServiceRepresentative, CoffeeBoy, Salesperson, InsideSalesperson, OutsideSalesperson, ShippingClerk, PurchasingClerk, PurchasingManager, etc.</li>
+</ul>
+<p></p>This framework provides reusable WOComponents that can be used as conditionals surrounding content on your pages such as action links, partial or even entire page content helping you to ensure that content and functionality of your application is only visible and available to users with appropriate privileges.
+
+<h2>Installation and Setup</h2>
+<p>
+Include the ERRoleBasedAccessControl framework in your classpath and configure the properties as shown below.
+</p>
+
+
+<h3>Properties</h3>
+<p>The properties below allow you to change the behaviour of ERJasperReports:</p>
+<dl>
+	<dt>er.rbac.userEntity (mandatory)</dt>
+	<dd>The name of the entity that represents users in your app.</dd>
+
+	<dt>er.rbac.userPrimaryKeyAttribute</dt>
+	<dd>The name of the primary key attribute in the app user entity.</dd>
+	
+	<dt>er.rbac.rolesRelationshipName</dt>
+	<dd>The name of the relationship dynamically created on your user entity at application startup. It defaults to &lt;roles&gt;</dd>
+
+</dl>
+
+<h2>Getting More Information</h2>
+<p>This framework does not rigidly apply a specific RBAC standard or specification. Nevertheless the following references can be useful in understanding the general concepts.
+<ul>
+	<li><a href = "http://en.wikipedia.org/wiki/Role-based_access_control">http://en.wikipedia.org/wiki/Role-based_access_control</a></li>
+
+	<li><a href = "http://csrc.nist.gov/groups/SNS/rbac/documents/design_implementation/Intro_role_based_access.htm">http://csrc.nist.gov/groups/SNS/rbac/documents/design_implementation/Intro_role_based_access.htm</a></li>
+	
+		<li><a href = "http://csrc.nist.gov/groups/SNS/rbac/">http://csrc.nist.gov/groups/SNS/rbac/</a></li>
+		
+		</ul>
+
+<p>
+
+</p>
+
+</body>
+</html>

@@ -1,0 +1,35 @@
+{
+    attributes = (
+        {
+            allowsNull = N; 
+            columnName = idprivilege; 
+            name = idPrivilege; 
+            prototypeName = id; 
+        }, 
+        {allowsNull = N; columnName = idrole; name = idRole; prototypeName = id; }
+    ); 
+    attributesUsedForLocking = (idPrivilege, idRole); 
+    className = EOGenericRecord; 
+    externalName = erroleprivilege; 
+    fetchSpecificationDictionary = {}; 
+    name = ERRolePrivilege; 
+    primaryKeyAttributes = (idPrivilege, idRole); 
+    relationships = (
+        {
+            destination = ERPrivilege; 
+            isMandatory = Y; 
+            isToMany = N; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = id; sourceAttribute = idPrivilege; }); 
+            name = privilege; 
+        }, 
+        {
+            destination = ERRole; 
+            isMandatory = Y; 
+            isToMany = N; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = id; sourceAttribute = idRole; }); 
+            name = role; 
+        }
+    ); 
+}

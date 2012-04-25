@@ -1,0 +1,30 @@
+.ERPrivilegeConditional-debug {
+	border: 1px solid red;
+	/* background: #F6D6A1;  */
+}
+
+/* The debug info pop-up table */
+table.ERPrivilegeConditional-debug-info {
+	background-color: #D98F16;
+	opacity: 1;
+	z-index: 1000;
+	color: #1E53AD;
+	border-collapse: collapse;
+}
+
+table.ERPrivilegeConditional-debug-info th, table.ERPrivilegeConditional-debug-info td {
+	padding: 4px;
+	border: 1px solid #DA6315;
+}
+
+table.ERPrivilegeConditional-debug-info td {
+	background-color: #EFBB66;
+}
+
+a.ERPrivilegeConditional-popup-link {
+	padding: 0;
+	margin: 0;
+	color: red;
+	background: yellow;
+	display: inline;
+}

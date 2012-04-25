@@ -1,0 +1,55 @@
+{
+    attributes = (
+        {
+            allowsNull = Y; 
+            columnName = category; 
+            name = category; 
+            prototypeName = varchar255; 
+            userInfo = {
+                "_EntityModeler" = {
+                    documentation = "This optional attribute exists only to sort privilege lists and make it easy to view what privileges are available with respect to a certain area of security. Typically you might use the entity name as a category to group privileges related to that entity. For privileges unrelated to an entity, you might just use a category that groups privileges that are in some way related to the same area of functionality in the app."; 
+                }; 
+            }; 
+        }, 
+        {
+            allowsNull = Y; 
+            columnName = description; 
+            name = description; 
+            prototypeName = varchar255; 
+            userInfo = {
+                "_EntityModeler" = {documentation = "(optional) The description of the privilege."; }; 
+            }; 
+        }, 
+        {allowsNull = N; name = id; prototypeName = id; }, 
+        {
+            allowsNull = N; 
+            columnName = name; 
+            name = name; 
+            prototypeName = varchar255; 
+            userInfo = {
+                "_EntityModeler" = {
+                    documentation = "The name of the privilege. This should not be readily editable in the application since this privilege name is literally used in your web pages as a text key."; 
+                }; 
+            }; 
+        }
+    ); 
+    attributesUsedForLocking = (category, id, name); 
+    className = "er.rbac.eof.ERPrivilege"; 
+    classProperties = (category, description, name, roles); 
+    externalName = erprivilege; 
+    fetchSpecificationDictionary = {}; 
+    name = ERPrivilege; 
+    primaryKeyAttributes = (id); 
+    relationships = (
+        {
+            deleteRule = EODeleteRuleCascade; 
+            destination = ERRolePrivilege; 
+            isToMany = Y; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = idPrivilege; sourceAttribute = id; }); 
+            name = rolePrivileges; 
+            propagatesPrimaryKey = Y; 
+        }, 
+        {definition = "rolePrivileges.role"; name = roles; }
+    ); 
+}

@@ -1,0 +1,47 @@
+{
+    attributes = (
+        {
+            allowsNull = Y; 
+            columnName = description; 
+            name = description; 
+            prototypeName = varchar255; 
+            userInfo = {
+                "_EntityModeler" = {documentation = "(optional) a description of the Role"; }; 
+            }; 
+        }, 
+        {allowsNull = N; name = id; prototypeName = id; }, 
+        {
+            allowsNull = N; 
+            columnName = name; 
+            name = name; 
+            prototypeName = varchar255; 
+            userInfo = {"_EntityModeler" = {documentation = "The common name of the Role"; }; }; 
+        }
+    ); 
+    attributesUsedForLocking = (id, name); 
+    className = "er.rbac.eof.ERRole"; 
+    classProperties = (description, name, privileges); 
+    externalName = errole; 
+    fetchSpecificationDictionary = {}; 
+    name = ERRole; 
+    primaryKeyAttributes = (id); 
+    relationships = (
+        {definition = "rolePrivileges.privilege"; name = privileges; }, 
+        {
+            deleteRule = EODeleteRuleCascade; 
+            destination = ERRolePrivilege; 
+            isToMany = Y; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = idRole; sourceAttribute = id; }); 
+            name = rolePrivileges; 
+            propagatesPrimaryKey = Y; 
+        }, 
+        {
+            destination = ERUserRole; 
+            isToMany = Y; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = idRole; sourceAttribute = id; }); 
+            name = userRoles; 
+        }
+    ); 
+}

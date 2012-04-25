@@ -1,0 +1,40 @@
+<wo:WOGenericContainer elementName = "$debugTag" class = "ERPrivilegeConditional-debug" _expression = "$expression" omitTags = "$notDebuggingPrivileges">
+  <wo:if condition = "$isDebuggingPrivileges">
+    <wo:WOGenericContainer elementName = "tr" omitTags = "$notTableRowsConditional">
+      <wo:WOGenericContainer elementName = "td" omitTags = "$notTableRowsConditional">
+        <a class = "ERPrivilegeConditional-popup-link" onmouseout = "this.innerHTML=this.innerHTML.replace('visibility: visible;','visibility: hidden;');" onmouseover = "this.innerHTML=this.innerHTML.replace('visibility: hidden;','visibility: visible;');">?<span onclick = "this.style.visibility='hidden'; return false;" style = "position:absolute;visibility: hidden;z-index: 1000;">
+            <table class = "ERPrivilegeConditional-debug-info" onclick = "this.style.visibility='hidden'; return false;">
+              <tr>
+                <th>Expression</th>
+                <td><wo:str value = "$expression" /></td>
+              </tr>
+              <tr>
+                <th>Qualifier</th>
+                <td><wo:str value = "$booleanExpressionParser.qualifier" /></td>
+              </tr>
+              <tr>
+                <th>Result</th>
+                <td><wo:str value = "$showContent" /></td>
+              </tr>
+				<tr>
+                <th>isTableRowsConditional</th>
+                <td><wo:str value = "$isTableRowsConditional" /></td>
+              </tr>
+              </tr>
+				<tr>
+                <th>debugTag</th>
+                <td><wo:str value = "$debugTag" /></td>
+              </tr>
+              <tr>
+                <th>Privileged Content</th>
+                <td>
+                  <wo:WOGenericContainer elementName = "table" omitTags = "$notTableRowsConditional"> <wo:WOComponentContent /></wo:WOGenericContainer>
+                </td>
+              </tr>
+            </table>
+          </span></a>
+      </wo:WOGenericContainer>
+    </wo:WOGenericContainer>
+  </wo:if>
+  <wo:if condition = "$showContent"><wo:WOComponentContent /></wo:if>
+</wo:WOGenericContainer>

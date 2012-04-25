@@ -1,0 +1,30 @@
+# Optional text file in CSV format that defines the current and active privileges.
+# The privileges in the database will be updated to match this file. See docs for details
+#er.rbac.privileges.fileName = Privileges.csv
+
+# The bundle in which to find the privileges file resource. Defaults to "app"
+#er.rbac.privileges.frameworkName = app
+
+
+# The name of the entity that represents users in your app. (mandatory)
+#er.rbac.userEntity=
+
+# The attribute of the user entity used for the roles join relationship. It defaults to the primary key attribute of the userEntity if not specified.
+#er.rbac.userJoinAttribute = id
+
+# The name of the relationship dynamically created on your user entity at application startup. It defaults to "roles"
+#er.rbac.rolesRelationshipName = roles
+
+# A method that exists on the user entity that allows custom logic implementation for privilege check.
+# The method must take one String argument (the privilege name) and must return a Boolean object.
+# Example method signature:
+#	public Boolean hasPrivilege(String privilegeName)
+# 
+# This is useful for logic that complements the basic ERRoleBasedAccessControl.hasPrivilege(userEO, privilegeName) method.
+# Your custom logic may check if a user is a super-user or root user and return true before checking it the privilege relationship exists
+# for example. Or, you might need custom logic while undergoing transition from an existing depreciated privilege system to ERRoleBasedAccessControl.
+#er.rbac.hasPrivilgeMethodName = hasPrivilege
+
+# ERPrivilegeConditional debugging (inspired by D2W debug info). It cna be set on a per-session basis, for sysadmin usage in deployment, however
+# this property turns it on globally when in development mode. Handy for slow motion Selenium testing with visual review of the pages and privileged sections.
+#er.rbac.components.ERPrivilegeConditional.isDebugging=true

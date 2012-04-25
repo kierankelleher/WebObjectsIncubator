@@ -1,0 +1,32 @@
+{
+    EOModelVersion = "2.1"; 
+    adaptorName = JDBC; 
+    connectionDictionary = {
+        URL = "jdbc:mysql://localhost/cheetah?capitalizeTypenames=true"; 
+        password = passw0rd; 
+        username = developer; 
+    }; 
+    entities = (
+        {className = "er.rbac.eof.ERPrivilege"; name = ERPrivilege; }, 
+        {className = "er.rbac.eof.ERRole"; name = ERRole; }, 
+        {className = EOGenericRecord; name = ERRolePrivilege; }, 
+        {className = EOGenericRecord; name = ERUserRole; }
+    ); 
+    userInfo = {
+        "_EntityModeler" = {
+            activeDatabaseConfigName = Default; 
+            databaseConfigs = {
+                Default = {
+                    adaptorName = JDBC; 
+                    connectionDictionary = {
+                        URL = "jdbc:mysql://localhost/cheetah?capitalizeTypenames=true"; 
+                        password = passw0rd; 
+                        username = developer; 
+                    }; 
+                    prototypeEntityName = EOJDBCMySQLPrototypes; 
+                }; 
+            }; 
+            entityNamingConvention = {case = Lower; separator = None; }; 
+        }; 
+    }; 
+}

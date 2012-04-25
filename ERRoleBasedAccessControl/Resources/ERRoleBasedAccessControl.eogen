@@ -1,0 +1,1 @@
+ -destination Sources -extension java -java -javaTemplate _WonderEntity2.java -model Resources/ERRoleBasedAccessControl.eomodeld -packagedirs -subclassDestination Sources -subclassJavaTemplate WonderEntity2.java -templatedir EOTemplates -verbose -loadModelGroup -define-EOGenericRecord er.extensions.eof.ERXGenericRecord
