@@ -13,8 +13,5 @@
 	<classpathentry kind="con" path="WOFramework/JavaWebObjects"/>
 	<classpathentry kind="con" path="WOFramework/JavaXML"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="Libraries/commons-lang-2.4.jar"/>
-	<classpathentry kind="con" path="WOFramework/WKMySql"/>
-	<classpathentry kind="con" path="WOFramework/WKWebObjects"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

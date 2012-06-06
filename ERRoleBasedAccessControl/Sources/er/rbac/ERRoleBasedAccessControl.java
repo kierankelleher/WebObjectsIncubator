@@ -1,20 +1,24 @@
 package er.rbac;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.text.StrTokenizer;
 import org.apache.log4j.Logger;
-
-import wk.eofextensions.WKEOUtils;
-import wk.foundation.WKFileUtilities;
 
 import com.webobjects.appserver.WOSession;
 import com.webobjects.eoaccess.EOEntity;
 import com.webobjects.eoaccess.EOModelGroup;
+import com.webobjects.eoaccess.EOObjectNotAvailableException;
+import com.webobjects.eoaccess.EOUtilities;
 import com.webobjects.eocontrol.EOClassDescription;
 import com.webobjects.eocontrol.EOEditingContext;
 import com.webobjects.eocontrol.EOEnterpriseObject;
@@ -29,6 +33,7 @@ import er.extensions.ERXExtensions;
 import er.extensions.ERXFrameworkPrincipal;
 import er.extensions.appserver.ERXApplication;
 import er.extensions.appserver.ERXSession;
+import er.extensions.eof.ERXEC;
 import er.extensions.eof.ERXEOAccessUtilities;
 import er.extensions.eof.ERXFetchSpecification;
 import er.extensions.eof.ERXQ;
@@ -128,7 +133,7 @@ public class ERRoleBasedAccessControl extends ERXFrameworkPrincipal {
     public void addRolesRelationshipToActorEntity(String entityName) {
         EOEntity entity  = EOModelGroup.defaultGroup().entityNamed(entityName);
         if(entity != null && entity.primaryKeyAttributeNames().count() == 1) {
-            addRolesRelationshipToActorEntity(entityName, (String) entity.primaryKeyAttributeNames().lastObject());
+            addRolesRelationshipToActorEntity(entityName, entity.primaryKeyAttributeNames().lastObject());
         } else {
             throw new IllegalArgumentException("ERRoleBasedAccessControl does not support compund primary keys. So " 
             		+ entityName + " is not suitable.");
@@ -203,7 +208,7 @@ public class ERRoleBasedAccessControl extends ERXFrameworkPrincipal {
 	 */
 	public void updatePrivileges() {
 		if (Constants.PRIVILEGES_FILE_NAME != null) {
-			EOEditingContext ec = WKEOUtils.newManualLockingEditingContext();
+			EOEditingContext ec = ERXEC.newEditingContext();
 			ec.lock();
 			try {
 				String privilegesFilePath = ERXFileUtilities.pathForResourceNamed(Constants.PRIVILEGES_FILE_NAME, Constants.PRIVILEGES_FRAMEWORK_NAME, null);
@@ -211,14 +216,26 @@ public class ERRoleBasedAccessControl extends ERXFrameworkPrincipal {
 				
 				NSMutableArray<String> updatedPrivileges = new NSMutableArray<String>();
 			
-				NSArray<NSDictionary<String,String>> privileges = WKFileUtilities.recordsFromCSVFile(privilegesFile);
+				NSArray<NSDictionary<String,String>> privileges = loadPrivileges(privilegesFile);
 				for (NSDictionary<String, String> privilegeRecord : privileges) {
 					
 					String category = privilegeRecord.objectForKey(ERPrivilege.Keys.CATEGORY);
 					String description = privilegeRecord.objectForKey(ERPrivilege.Keys.DESCRIPTION);
 					String name = privilegeRecord.objectForKey(ERPrivilege.Keys.NAME);
 					
-					ERPrivilege privilegeEO = WKEOUtils.objectMatchingKeyAndValue(ec, ERPrivilege.ENTITY_NAME, ERPrivilege.Keys.NAME, name);
+					ERPrivilege privilegeEO = null;
+					
+					try {
+						privilegeEO = (ERPrivilege) EOUtilities.objectMatchingKeyAndValue(ec, ERPrivilege.ENTITY_NAME, ERPrivilege.Keys.NAME, name);
+					} catch (EOUtilities.MoreThanOneException moreThanOneException) {
+						// This should NEVER happen for the context of this, so we lof.error
+						// and throw runtime
+						log.error("More than one privilege named \"" + name + "\"", moreThanOneException);
+						throw new RuntimeException("More than one privilege named \"" + name + "\"", moreThanOneException);
+					} catch (EOObjectNotAvailableException notAvailableException) {
+						; // Ignore missing exception
+					}
+					
 					if (privilegeEO == null) {
 						// Create it
 						privilegeEO = ERPrivilege.createERPrivilege(ec, name);
@@ -253,7 +270,8 @@ public class ERRoleBasedAccessControl extends ERXFrameworkPrincipal {
 				// Now find all pivileges that were not updated and mark them as deprecated
 				EOQualifier q = ERPrivilege.ERXKeys.NAME.notIn(updatedPrivileges);
 				
-				NSArray<ERPrivilege> deprecatedPrivileges = WKEOUtils.objectsMatchingQualifier(ec, ERPrivilege.ENTITY_NAME, q);
+				ERXFetchSpecification<ERPrivilege> fs = new ERXFetchSpecification<ERPrivilege>(ERPrivilege.ENTITY_NAME, q, null, false, false, null);
+				NSArray<ERPrivilege> deprecatedPrivileges = fs.fetchObjects(ec);
 				
 				for (ERPrivilege deprecatedPrivilege : deprecatedPrivileges) {
 					String desc = deprecatedPrivilege.description();
@@ -273,11 +291,7 @@ public class ERRoleBasedAccessControl extends ERXFrameworkPrincipal {
 			} finally {
 				ec.unlock();
 			}
-
-		
 		}
-		
-
 	}
 	
 	/**
@@ -407,6 +421,34 @@ public class ERRoleBasedAccessControl extends ERXFrameworkPrincipal {
 		return sb.toString();
 	}
 	
-	
+	/**
+	 * @return the privilege definitions loaded from CSV file.
+	 * @throws IOException 
+	 */
+	private static NSArray<NSDictionary<String,String>> loadPrivileges(File file) {
+		NSMutableArray<NSDictionary<String, String>> records;
+		try {
+			BufferedReader reader = new BufferedReader(new FileReader(file));
+			String line = reader.readLine();
+			StrTokenizer csvParser = StrTokenizer.getCSVInstance();
+			csvParser.reset(line);
+			String[] headings = csvParser.getTokenArray();
+			
+			records = new NSMutableArray<NSDictionary<String,String>>();
+			
+			while ( (line = reader.readLine()) != null ) {
+				csvParser.reset(line);
+				String[] values = csvParser.getTokenArray();
+				NSDictionary<String,String> record = new NSDictionary<String,String>(values, headings);
+				records.add(record);
+			}
+		} catch (FileNotFoundException e) {
+			throw new RuntimeException("Cannot find the file '" + file + "'", e);
+		} catch (IOException e) {
+			throw new RuntimeException("Failed to read the file '" + file + "'", e);
+		}
+		
+		return records.immutableClone();
+	}
 
 }

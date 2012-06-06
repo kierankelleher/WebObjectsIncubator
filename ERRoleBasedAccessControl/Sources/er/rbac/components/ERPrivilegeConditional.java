@@ -2,8 +2,6 @@ package er.rbac.components;
 
 import org.apache.log4j.Logger;
 
-import wk.webobjects.appserver.WKResetManager;
-
 import com.webobjects.appserver.WOContext;
 import com.webobjects.eocontrol.EOEnterpriseObject;
 import com.webobjects.foundation.NSKeyValueCoding;
@@ -55,7 +53,16 @@ public class ERPrivilegeConditional extends ERXComponent {
 
 	@Override
 	public void reset() {
-		WKResetManager.reset(this);
+		_booleanExpressionParser = null;
+		_currentUser = null;
+		_debugTag = null;
+		_expression = null;
+		_hasCurrentUser = null;
+		_isDebuggingPrivileges = null;
+		_isTableRowsConditional = null;
+		_kvcUser = null;
+		_showContent = null;
+		
 	}
 
 	/** @return whether to show privilege protected content or not */
@@ -208,32 +215,9 @@ public class ERPrivilegeConditional extends ERXComponent {
 
 	}
 
-//	private String _contentOutlineClass;
-//
-//	/**
-//	 * @return empty string if the session is not debugging privileges, otherwise
-//	 *         the span element css class name that identifies the privilege
-//	 *         protected content
-//	 */
-//	public String contentOutlineClass() {
-//		if (_contentOutlineClass == null) {
-//			if (ERRoleBasedAccessControl.isInspectingPrivileges()) {
-//				_contentOutlineClass = "ERPrivilegeConditional-debug";
-//			} else {
-//				_contentOutlineClass = "";
-//			}
-//		}
-//		return _contentOutlineClass;
-//	}
-
-	private Boolean _notDebuggingPrivileges;
-
 	/** @return whether or not to render the debug outline class */
 	public boolean notDebuggingPrivileges() {
-		if (_notDebuggingPrivileges == null) {
-			_notDebuggingPrivileges = Boolean.valueOf(!isDebuggingPrivileges());
-		}
-		return _notDebuggingPrivileges.booleanValue();
+		return !isDebuggingPrivileges();
 	}
 
 	/**
